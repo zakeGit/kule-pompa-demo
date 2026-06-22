@@ -1,5 +1,5 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Layout from "@/pages/Layout";
 import OverviewPage from "@/pages/OverviewPage";
 import { KazanPage, DegazorPage, IsgPage, HidroforPage, FiltrePage } from "@/pages/SlidePages";
@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<OverviewPage />} />
@@ -19,7 +19,7 @@ function App() {
             <Route path="/filtreleme" element={<FiltrePage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
       <Toaster position="top-right" />
     </div>
   );
