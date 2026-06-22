@@ -19,8 +19,8 @@ export default function OverviewPage() {
             <PumpCard key={id} id={id} pump={sim.pumps[id]} onSelect={setSelectedId} selected={selectedId === id} />
           ))}
         </div>
-        {/* Output cluster + tower */}
-        <div className="flex flex-col gap-3 pt-12">
+        {/* Output cluster + compact vertical tower gauge */}
+        <div className="flex items-start gap-4 pt-12">
           <OutputCluster
             mainBar={meta.bar}
             mainFlow={meta.flow}
@@ -28,22 +28,26 @@ export default function OverviewPage() {
             kuleLabel={label}
             returnTemp={meta.returnTemp}
           />
-          {/* Tower mini panel */}
-          <div className="ml-6 w-32 bg-slate-900 rounded p-2 text-white">
-            <div className="text-[10px] uppercase tracking-widest text-cyan-300 mb-1">Kule Seviyesi</div>
-            <div className="h-20 bg-slate-800 rounded relative overflow-hidden border border-slate-700">
+          {/* Compact vertical tower gauge (narrow column) */}
+          <div className="bg-slate-900 rounded-md p-1.5 text-white border border-slate-700 shadow w-16">
+            <div className="text-[8px] uppercase tracking-widest text-cyan-300 mb-1 text-center font-bold">KULE</div>
+            <div className="h-32 bg-slate-800 rounded relative overflow-hidden border border-slate-700">
               <div
                 className="absolute bottom-0 left-0 right-0 transition-all duration-500"
                 style={{
                   height: `${tower.level}%`,
                   background: "linear-gradient(0deg, #0e8ea0 0%, #38e4ff 100%)",
-                  boxShadow: "inset 0 -2px 6px rgba(56, 228, 255, 0.6)",
+                  boxShadow: "inset 0 -2px 6px rgba(56,228,255,0.7)",
                 }}
               />
+              {/* Scale ticks */}
+              {[25, 50, 75].map(p => (
+                <div key={p} className="absolute left-0 right-0 border-t border-cyan-900/50" style={{ bottom: `${p}%` }} />
+              ))}
             </div>
-            <div className="mt-1 flex justify-between text-[10px] font-mono">
-              <span className="text-cyan-300">{tower.level.toFixed(0)}%</span>
-              <span className="text-amber-300">{tower.temp.toFixed(1)}°C</span>
+            <div className="text-center mt-1">
+              <div className="font-mono font-bold text-[11px] text-cyan-300 leading-none">{tower.level.toFixed(0)}%</div>
+              <div className="font-mono text-[9px] text-amber-300 mt-0.5">{tower.temp.toFixed(1)}°C</div>
             </div>
           </div>
         </div>
