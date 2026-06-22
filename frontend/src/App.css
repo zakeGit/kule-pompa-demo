@@ -3,13 +3,13 @@
   min-height: 100vh;
 }
 
-/* Impeller rotation animation - rotates around its translated origin */
+/* Small motor fan rotation animation - rotates around inner group's 0,0 */
 @keyframes spin-impeller {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-.impeller-spin {
-  animation: spin-impeller 0.9s linear infinite;
+.small-fan-spin {
+  animation: spin-impeller 0.4s linear infinite;
   transform-origin: 0 0;
 }
 

@@ -1,38 +1,41 @@
 import React from "react";
 
-/* Simple SCADA-style pump: round casing with 5-blade impeller.
-   - Green casing when ON, gray when OFF, red when FAULT
-   - Impeller spins via CSS rotation
-   - Side flanges for suction/discharge pipe connection */
+/* Detailed 3D-style pump (perspective look) with ONE small rotating fan element on the motor end. */
 
-export default function Pump3D({ on, fault, color, width = 200, height = 160 }) {
-  const casing = fault ? "#cf2027" : on ? "#1faf45" : "#9aa9b7";
-  const casingDark = fault ? "#7a0f15" : on ? "#0d6b2a" : "#5a6976";
-  const casingLight = fault ? "#ff5a6b" : on ? "#5ed97a" : "#cdd3da";
+export default function Pump3D({ on, fault, color = "#cf2027", width = 220, height = 160 }) {
+  const stateColor = fault ? "#ff3b4e" : on ? "#36ff7a" : "#5a6976";
 
   return (
     <div style={{ width, height, position: "relative", pointerEvents: "none" }} className="select-none">
-      <svg viewBox="0 0 200 160" width={width} height={height}>
+      <svg viewBox="0 0 220 160" width={width} height={height}>
         <defs>
-          <radialGradient id={`pumpBody-${casing.replace("#", "")}`} cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stopColor={casingLight} />
-            <stop offset="55%" stopColor={casing} />
-            <stop offset="100%" stopColor={casingDark} />
+          {/* Motor body shading */}
+          <linearGradient id="motorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#3a3a3a" />
+            <stop offset="45%" stopColor="#1a1a1a" />
+            <stop offset="100%" stopColor="#050505" />
+          </linearGradient>
+          <radialGradient id={`voluteGrad-${color.replace("#", "")}`} cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#fff" stopOpacity="0.55" />
+            <stop offset="35%" stopColor={color} />
+            <stop offset="100%" stopColor="#000" stopOpacity="0.85" />
           </radialGradient>
-          <linearGradient id="pipeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#e8eef3" />
-            <stop offset="40%" stopColor="#b0bcc9" />
-            <stop offset="60%" stopColor="#8794a3" />
-            <stop offset="100%" stopColor="#5a6976" />
+          <radialGradient id="fanHubGrad" cx="35%" cy="35%" r="70%">
+            <stop offset="0%" stopColor="#2a2a2a" />
+            <stop offset="100%" stopColor="#000" />
+          </radialGradient>
+          <linearGradient id="baseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#2a2a2a" />
+            <stop offset="100%" stopColor="#0a0a0a" />
           </linearGradient>
           <linearGradient id="flangeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#e8eef3" />
-            <stop offset="50%" stopColor="#9aa9b7" />
-            <stop offset="100%" stopColor="#5a6976" />
+            <stop offset="50%" stopColor="#8794a3" />
+            <stop offset="100%" stopColor="#3a3a3a" />
           </linearGradient>
-          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" />
-            <feOffset dx="0" dy="3" />
+            <feOffset dx="0" dy="3" result="offsetblur" />
             <feComponentTransfer><feFuncA type="linear" slope="0.4" /></feComponentTransfer>
             <feMerge>
               <feMergeNode />
@@ -41,68 +44,103 @@ export default function Pump3D({ on, fault, color, width = 200, height = 160 }) 
           </filter>
         </defs>
 
-        <g filter="url(#softShadow)" transform="translate(0,5)">
-          {/* Left pipe (suction) */}
-          <rect x="0" y="68" width="46" height="22" fill="url(#pipeGrad)" stroke="#5a6976" strokeWidth="0.6" />
-          <rect x="40" y="64" width="10" height="30" fill="url(#flangeGrad)" stroke="#5a6976" strokeWidth="0.6" rx="1" />
+        <g filter="url(#dropShadow)" transform="translate(0,5)">
+          {/* ====== Mounting base with feet ====== */}
+          <rect x="20" y="124" width="180" height="12" fill="url(#baseGrad)" rx="2" />
+          <rect x="25" y="136" width="22" height="7" fill="#0a0a0a" />
+          <rect x="173" y="136" width="22" height="7" fill="#0a0a0a" />
 
-          {/* Right pipe (discharge) */}
-          <rect x="154" y="68" width="46" height="22" fill="url(#pipeGrad)" stroke="#5a6976" strokeWidth="0.6" />
-          <rect x="150" y="64" width="10" height="30" fill="url(#flangeGrad)" stroke="#5a6976" strokeWidth="0.6" rx="1" />
+          {/* ====== Motor (left, horizontal cylinder in 3D oblique projection) ====== */}
+          {/* Back face (visible due to perspective) */}
+          <ellipse cx="48" cy="70" rx="14" ry="38" fill="#0a0a0a" />
+          {/* Motor body */}
+          <rect x="48" y="32" width="62" height="76" fill="url(#motorGrad)" />
+          {/* Front face (where coupling exits) */}
+          <ellipse cx="110" cy="70" rx="14" ry="38" fill="#1a1a1a" />
+          {/* Cooling fins on motor body */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <line key={i} x1={52 + i * 4.2} y1="32" x2={52 + i * 4.2} y2="108" stroke="#000" strokeWidth="0.6" opacity="0.85" />
+          ))}
+          {/* Terminal box on top */}
+          <rect x="64" y="16" width="32" height="18" rx="2" fill="#1a1a1a" stroke="#000" />
+          <rect x="68" y="11" width="24" height="6" fill="#0a0a0a" />
+          <rect x="72" y="22" width="4" height="4" fill="#2a2a2a" />
+          <rect x="84" y="22" width="4" height="4" fill="#2a2a2a" />
+          {/* Highlight on top of motor */}
+          <rect x="50" y="34" width="58" height="6" fill="#fff" opacity="0.08" />
 
-          {/* Pump casing - circular */}
-          <circle cx="100" cy="79" r="55" fill={`url(#pumpBody-${casing.replace("#", "")})`} stroke={casingDark} strokeWidth="2" />
-          {/* Inner ring */}
-          <circle cx="100" cy="79" r="48" fill="none" stroke={casingDark} strokeWidth="1" opacity="0.5" />
-          {/* highlight on casing */}
-          <ellipse cx="80" cy="60" rx="20" ry="10" fill="#fff" opacity="0.18" />
-
-          {/* Impeller (white 5-blade) - rotates around center.
-              Outer <g transform="translate"> positions impeller; inner <g> handles CSS rotation around 0,0. */}
-          <g transform="translate(100 79)">
-            <g
-              className={on && !fault ? "impeller-spin" : ""}
-            >
-              {/* 5 curved blades centered at 0,0 */}
-              {[0, 72, 144, 216, 288].map((angle) => (
-                <path
+          {/* ====== Small rotating fan on the BACK (left) end of motor ====== */}
+          {/* Fan housing recess */}
+          <ellipse cx="42" cy="70" rx="11" ry="22" fill="#000" />
+          <ellipse cx="44" cy="70" rx="9" ry="20" fill="url(#fanHubGrad)" />
+          {/* Rotating fan blades - SMALL, on the motor back */}
+          <g transform="translate(44 70)">
+            <g className={on && !fault ? "small-fan-spin" : ""}>
+              {[0, 60, 120, 180, 240, 300].map((angle) => (
+                <ellipse
                   key={angle}
-                  d="M 0 0 Q 9 -25 0 -45 Q -9 -25 0 0 Z"
-                  fill="#f4f6f8"
-                  stroke={casingDark}
-                  strokeWidth="1.2"
-                  strokeLinejoin="round"
+                  cx="0"
+                  cy="-12"
+                  rx="2.5"
+                  ry="8"
+                  fill="#3a3a3a"
+                  stroke="#0a0a0a"
+                  strokeWidth="0.4"
                   transform={`rotate(${angle})`}
-                  opacity="0.95"
                 />
               ))}
-              {/* Center hub */}
-              <circle r="9" fill={casingDark} />
-              <circle r="3" fill="#2a2a2a" />
+              <circle r="4" fill="#1a1a1a" stroke="#000" strokeWidth="0.4" />
+              <circle r="1.4" fill="#666" />
             </g>
           </g>
+          {/* Fan grille (static thin lines on top) */}
+          {[0, 45, 90, 135].map((angle) => (
+            <line
+              key={angle}
+              x1={44 + 19 * Math.cos((angle * Math.PI) / 180)}
+              y1={70 + 19 * Math.sin((angle * Math.PI) / 180)}
+              x2={44 - 19 * Math.cos((angle * Math.PI) / 180)}
+              y2={70 - 19 * Math.sin((angle * Math.PI) / 180)}
+              stroke="#0a0a0a"
+              strokeWidth="0.7"
+              opacity="0.6"
+            />
+          ))}
 
-          {/* Mounting bolt marks on casing */}
-          {[0, 60, 120, 180, 240, 300].map((angle) => {
-            const a = (angle * Math.PI) / 180;
-            return (
-              <circle
-                key={angle}
-                cx={100 + Math.cos(a) * 50}
-                cy={79 + Math.sin(a) * 50}
-                r="1.5"
-                fill={casingDark}
-              />
-            );
-          })}
+          {/* ====== Coupling between motor and pump ====== */}
+          <rect x="110" y="58" width="14" height="24" fill="#5a5a5a" stroke="#000" strokeWidth="0.4" />
+          <rect x="110" y="60" width="14" height="2" fill="#1a1a1a" />
+          <rect x="110" y="78" width="14" height="2" fill="#1a1a1a" />
+
+          {/* ====== Pump volute (right, colored sphere) ====== */}
+          <ellipse cx="160" cy="70" rx="34" ry="40" fill={`url(#voluteGrad-${color.replace("#", "")})`} stroke="#0a0a0a" strokeWidth="1" />
+          {/* Volute mounting flange */}
+          <rect x="124" y="46" width="14" height="48" fill="#1a1a1a" />
+          {/* Highlight on volute */}
+          <ellipse cx="148" cy="56" rx="12" ry="16" fill="#fff" opacity="0.22" />
+
+          {/* Discharge outlet (top) */}
+          <rect x="150" y="14" width="22" height="22" fill={color} stroke="#0a0a0a" strokeWidth="0.6" />
+          <rect x="146" y="8" width="30" height="8" fill="url(#flangeGrad)" stroke="#000" strokeWidth="0.4" rx="1" />
+          {/* Suction inlet (bottom) */}
+          <rect x="150" y="104" width="22" height="22" fill={color} stroke="#0a0a0a" strokeWidth="0.6" />
+          <rect x="146" y="124" width="30" height="8" fill="url(#flangeGrad)" stroke="#000" strokeWidth="0.4" rx="1" />
+
+          {/* Grundfos branding on motor */}
+          <text x="78" y="74" fontSize="6" fill="#fff" opacity="0.45" fontFamily="Arial" fontWeight="bold" letterSpacing="0.5">GRUNDFOS</text>
         </g>
 
-        {/* Status LED */}
-        <circle cx="180" cy="22" r="5" fill={fault ? "#ff3b4e" : on ? "#36ff7a" : "#5a6976"} stroke="#1a1a1a" strokeWidth="0.8">
+        {/* Status LED top-right */}
+        <circle cx="200" cy="22" r="5" fill={stateColor} stroke="#1a1a1a" strokeWidth="0.8">
           {on && !fault && (
             <animate attributeName="opacity" values="1;0.4;1" dur="1.2s" repeatCount="indefinite" />
           )}
         </circle>
+        {on && !fault && (
+          <circle cx="200" cy="22" r="9" fill="#36ff7a" opacity="0.25">
+            <animate attributeName="opacity" values="0.4;0.05;0.4" dur="1.2s" repeatCount="indefinite" />
+          </circle>
+        )}
       </svg>
     </div>
   );
