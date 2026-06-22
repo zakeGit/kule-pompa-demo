@@ -1,34 +1,178 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* SCADA Industrial Dark Theme */
+.App {
+  background: #0a1118;
+  min-height: 100vh;
+  color: #cfe3ff;
+  font-family: "Share Tech Mono", "Roboto Mono", "Consolas", monospace;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Animated scanlines for industrial CRT look */
+.scada-scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 5;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* LED-style digit */
+.led-digit {
+  font-family: "DSEG7-Classic", "Share Tech Mono", "Courier New", monospace;
+  letter-spacing: 0.05em;
+  text-shadow:
+    0 0 4px currentColor,
+    0 0 10px currentColor;
 }
 
-.App-link {
-    color: #61dafb;
+.led-green { color: #36ff7a; }
+.led-amber { color: #ffb13b; }
+.led-red   { color: #ff3b4e; }
+.led-cyan  { color: #38e4ff; }
+.led-dim   { color: #1e3a45; }
+
+/* SCADA panel base */
+.scada-panel {
+  background:
+    linear-gradient(180deg, rgba(20, 38, 55, 0.85), rgba(8, 18, 28, 0.95)),
+    radial-gradient(circle at 30% 0%, rgba(56, 228, 255, 0.06), transparent 60%);
+  border: 1px solid #1f3a52;
+  box-shadow:
+    inset 0 1px 0 rgba(80, 160, 200, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(0, 0, 0, 0.55);
+  border-radius: 6px;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.scada-panel-header {
+  background: linear-gradient(180deg, #15314a 0%, #0c2030 100%);
+  color: #8fd0ff;
+  border-bottom: 1px solid #1f3a52;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 10px;
+}
+
+/* Indicator lights */
+.led-light {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.7);
+}
+.led-light.on-green {
+  background: radial-gradient(circle at 30% 30%, #aaffc4, #1fd55f 60%, #0a3a1d);
+  box-shadow: 0 0 8px #36ff7a, 0 0 14px #36ff7a, inset 0 0 4px rgba(0,0,0,0.5);
+}
+.led-light.on-red {
+  background: radial-gradient(circle at 30% 30%, #ffc4c8, #ff3b4e 60%, #4a0a14);
+  box-shadow: 0 0 8px #ff3b4e, 0 0 14px #ff3b4e, inset 0 0 4px rgba(0,0,0,0.5);
+}
+.led-light.on-amber {
+  background: radial-gradient(circle at 30% 30%, #ffe6b3, #ffb13b 60%, #4a2a0a);
+  box-shadow: 0 0 8px #ffb13b, 0 0 14px #ffb13b, inset 0 0 4px rgba(0,0,0,0.5);
+}
+.led-light.off {
+  background: #0e1c28;
+  border: 1px solid #1f3a52;
+}
+
+/* Industrial buttons */
+.btn-industrial {
+  background: linear-gradient(180deg, #1c3a52 0%, #0d1e2c 100%);
+  border: 1px solid #2a5577;
+  color: #cfe3ff;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+}
+.btn-industrial:hover {
+  background: linear-gradient(180deg, #25506e 0%, #112838 100%);
+  border-color: #3a7099;
+  color: #fff;
+}
+.btn-industrial.active {
+  background: linear-gradient(180deg, #1a6b3a 0%, #093d20 100%);
+  border-color: #36ff7a;
+  color: #aaffc4;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(54, 255, 122, 0.4);
+}
+.btn-industrial.danger.active {
+  background: linear-gradient(180deg, #6b1a26 0%, #3d0911 100%);
+  border-color: #ff3b4e;
+  color: #ffc4c8;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(255, 59, 78, 0.4);
+}
+
+/* Bezel for gauges */
+.bezel {
+  background:
+    linear-gradient(180deg, #0a1118 0%, #050a10 100%);
+  border: 1px solid #1f3a52;
+  box-shadow:
+    inset 0 0 0 1px #000,
+    inset 0 0 12px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(56, 228, 255, 0.05);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+/* Blinking alarm */
+@keyframes blink-red {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.3; }
+}
+.alarm-blink {
+  animation: blink-red 0.8s infinite;
+}
+
+/* Pump status pulse */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.status-pulse { animation: pulse-glow 1.4s ease-in-out infinite; }
+
+/* Grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(56, 228, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 228, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Scrollbar */
+.scada-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.scada-scroll::-webkit-scrollbar-track { background: #0a1118; }
+.scada-scroll::-webkit-scrollbar-thumb { background: #1f3a52; border-radius: 3px; }
+.scada-scroll::-webkit-scrollbar-thumb:hover { background: #2a5577; }
+
+/* Trend bar */
+.trend-bar {
+  background: linear-gradient(180deg, #36ff7a 0%, #1fd55f 100%);
+  box-shadow: 0 0 4px rgba(54, 255, 122, 0.5);
 }
