@@ -51,16 +51,9 @@ export const PumpCard = ({ id, pump, onSelect, selected }) => {
       onClick={() => onSelect && onSelect(id)}
       data-testid={`pump-card-${id}`}
     >
-      {/* FBS - upper pressures */}
-      <div className="flex flex-col gap-1 mb-1">
-        <div className="flex gap-2">
-          <ValueLabel label="FBS" value={`${pump.fbsTop[0].toFixed(2)} Bar`} />
-          <ValueLabel label="FBS" value={`${pump.fbsTop[1].toFixed(2)} Bar`} />
-        </div>
-        <div className="flex gap-2">
-          <ValueLabel label="FBS" value={`${pump.fbsBot[0].toFixed(2)} Bar`} />
-          <ValueLabel label="FBS" value={`${pump.fbsBot[1].toFixed(2)} Bar`} />
-        </div>
+      {/* Single FBS - upper pressure */}
+      <div className="mb-1">
+        <ValueLabel label="FBS" value={`${pump.fbsTop[0].toFixed(2)} Bar`} />
       </div>
 
       {/* EG kW + horizontal feed pipe + vertical drop */}
@@ -82,16 +75,9 @@ export const PumpCard = ({ id, pump, onSelect, selected }) => {
       <PipeV height={20} className="mt-2" />
       <PipeH width={200} />
 
-      {/* VS - lower vacuum */}
-      <div className="flex flex-col gap-1 mt-1">
-        <div className="flex gap-2">
-          <ValueLabel label="VS" value={`${pump.vsTop[0].toFixed(0)} Pa`} />
-          <ValueLabel label="VS" value={`${pump.vsTop[1].toFixed(0)} Pa`} />
-        </div>
-        <div className="flex gap-2">
-          <ValueLabel label="VS" value={`${pump.vsBot[0].toFixed(0)} Pa`} />
-          <ValueLabel label="VS" value={`${pump.vsBot[1].toFixed(0)} Pa`} />
-        </div>
+      {/* Single VS - lower vacuum */}
+      <div className="mt-1">
+        <ValueLabel label="VS" value={`${pump.vsTop[0].toFixed(0)} Pa`} />
       </div>
     </div>
   );
