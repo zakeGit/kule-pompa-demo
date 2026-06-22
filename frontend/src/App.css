@@ -3,14 +3,14 @@
   min-height: 100vh;
 }
 
-/* Fan rotation animation */
-@keyframes spin-fan {
+/* Impeller rotation animation - rotates around its translated origin */
+@keyframes spin-impeller {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-.fan-spin {
-  animation: spin-fan 0.5s linear infinite;
-  transform-origin: 42px 70px;
+.impeller-spin {
+  animation: spin-impeller 0.9s linear infinite;
+  transform-origin: 0 0;
 }
 
 /* alarm pulse */
