@@ -2,7 +2,7 @@ import React from "react";
 import { useOutletContext } from "react-router-dom";
 import { useSim } from "@/hooks/SimContext";
 import { PUMP_CATALOG } from "@/hooks/useSimulation";
-import Pump3D from "@/components/scada/Pump3D";
+import PumpRender from "@/components/scada/PumpRender";
 import { ValueLabel, PipeH, PipeV, PipeArrow } from "@/components/scada/SchematicBlocks";
 import { PageTitle } from "@/pages/OverviewPage";
 
@@ -46,13 +46,13 @@ export default function GroupPage({
                 <div className="flex items-center gap-2">
                   <ValueLabel label="EG" value={`${pump.kw.toFixed(2)} kW`} />
                   <PipeH width={20} />
-                  {/* 3D pump */}
+                  {/* 3D pump (vertical or horizontal based on group) */}
                   <div
                     className={`cursor-pointer ring-2 ring-offset-2 ${selected ? ringClr : "ring-transparent"} transition`}
                     onClick={() => setSelectedId(id)}
                     data-testid={`pump-card-${id}`}
                   >
-                    <Pump3D on={pump.on} fault={pump.fault} color={def.color} width={210} height={160} />
+                    <PumpRender id={id} pump={pump} size="lg" />
                   </div>
                 </div>
                 {/* Pump label */}

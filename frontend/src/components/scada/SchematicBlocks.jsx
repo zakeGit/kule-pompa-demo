@@ -1,5 +1,5 @@
 import React from "react";
-import Pump3D from "@/components/scada/Pump3D";
+import PumpRender from "@/components/scada/PumpRender";
 import { PUMP_CATALOG } from "@/hooks/useSimulation";
 
 /* Reusable building blocks for any slide */
@@ -70,17 +70,9 @@ export const PumpCard = ({ id, pump, onSelect, selected }) => {
       <PipeH width={200} className="my-1" />
       <PipeV height={20} />
 
-      {/* 3D Pump */}
+      {/* 3D Pump (vertical or horizontal based on group) */}
       <div className="relative">
-        <Pump3D on={pump.on} fault={pump.fault} color={def.color} width={200} height={150} />
-        <div className="absolute -top-1 right-2">
-          <span
-            className={`inline-block w-3 h-3 rounded-full ${
-              pump.fault ? "bg-red-500 animate-pulse" : pump.on ? "bg-green-500" : "bg-slate-400"
-            } shadow`}
-            style={pump.on && !pump.fault ? { boxShadow: "0 0 8px #36ff7a" } : {}}
-          />
-        </div>
+        <PumpRender id={id} pump={pump} />
         {/* Label */}
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-white border border-[#2563a0] text-xs font-bold tracking-widest text-[#0a3a5a]">
           {id}
