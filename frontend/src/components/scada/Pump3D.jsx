@@ -69,41 +69,20 @@ export default function Pump3D({ on, fault, color = "#cf2027", width = 220, heig
           {/* Highlight on top of motor */}
           <rect x="50" y="34" width="58" height="6" fill="#fff" opacity="0.08" />
 
-          {/* ====== Small rotating fan on the BACK (left) end of motor ====== */}
-          {/* Fan housing recess */}
-          <ellipse cx="42" cy="70" rx="11" ry="22" fill="#000" />
-          <ellipse cx="44" cy="70" rx="9" ry="20" fill="url(#fanHubGrad)" />
-          {/* Rotating fan blades - SMALL, on the motor back */}
-          <g transform="translate(44 70)">
-            <g className={on && !fault ? "small-fan-spin" : ""}>
-              {[0, 60, 120, 180, 240, 300].map((angle) => (
-                <ellipse
-                  key={angle}
-                  cx="0"
-                  cy="-12"
-                  rx="2.5"
-                  ry="8"
-                  fill="#3a3a3a"
-                  stroke="#0a0a0a"
-                  strokeWidth="0.4"
-                  transform={`rotate(${angle})`}
-                />
-              ))}
-              <circle r="4" fill="#1a1a1a" stroke="#000" strokeWidth="0.4" />
-              <circle r="1.4" fill="#666" />
-            </g>
-          </g>
-          {/* Fan grille (static thin lines on top) */}
-          {[0, 45, 90, 135].map((angle) => (
+          {/* ====== Small back-fan housing (static, just visual detail) ====== */}
+          <ellipse cx="42" cy="70" rx="9" ry="18" fill="#000" />
+          <ellipse cx="44" cy="70" rx="7" ry="16" fill="url(#fanHubGrad)" />
+          {/* Small grille lines */}
+          {[0, 60, 120].map((angle) => (
             <line
               key={angle}
-              x1={44 + 19 * Math.cos((angle * Math.PI) / 180)}
-              y1={70 + 19 * Math.sin((angle * Math.PI) / 180)}
-              x2={44 - 19 * Math.cos((angle * Math.PI) / 180)}
-              y2={70 - 19 * Math.sin((angle * Math.PI) / 180)}
+              x1={44 + 15 * Math.cos((angle * Math.PI) / 180)}
+              y1={70 + 15 * Math.sin((angle * Math.PI) / 180)}
+              x2={44 - 15 * Math.cos((angle * Math.PI) / 180)}
+              y2={70 - 15 * Math.sin((angle * Math.PI) / 180)}
               stroke="#0a0a0a"
-              strokeWidth="0.7"
-              opacity="0.6"
+              strokeWidth="0.5"
+              opacity="0.5"
             />
           ))}
 
@@ -118,6 +97,30 @@ export default function Pump3D({ on, fault, color = "#cf2027", width = 220, heig
           <rect x="124" y="46" width="14" height="48" fill="#1a1a1a" />
           {/* Highlight on volute */}
           <ellipse cx="148" cy="56" rx="12" ry="16" fill="#fff" opacity="0.22" />
+
+          {/* ====== Center inspection window with rotating GREEN impeller ====== */}
+          <circle cx="160" cy="70" r="20" fill="#0a1a14" stroke="#000" strokeWidth="1.5" />
+          <circle cx="160" cy="70" r="18" fill="#062012" />
+          {/* Rotating green impeller — visible & centered on the volute */}
+          <g transform="translate(160 70)">
+            <g className={on && !fault ? "small-fan-spin" : ""}>
+              {[0, 72, 144, 216, 288].map((angle) => (
+                <path
+                  key={angle}
+                  d="M 0 0 Q 5 -8 0 -16 Q -5 -8 0 0 Z"
+                  fill={on && !fault ? "#7dfba7" : "#5a8a6f"}
+                  stroke={on && !fault ? "#1fd35e" : "#2a4a36"}
+                  strokeWidth="0.6"
+                  transform={`rotate(${angle})`}
+                  opacity="0.95"
+                />
+              ))}
+              <circle r="3.5" fill="#1a3a26" stroke="#000" strokeWidth="0.4" />
+              <circle r="1.3" fill="#7dfba7" opacity={on && !fault ? 1 : 0.4} />
+            </g>
+          </g>
+          {/* Glass reflection on the window */}
+          <ellipse cx="154" cy="62" rx="6" ry="4" fill="#fff" opacity="0.12" />
 
           {/* Discharge outlet (top) */}
           <rect x="150" y="14" width="22" height="22" fill={color} stroke="#0a0a0a" strokeWidth="0.6" />

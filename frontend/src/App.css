@@ -9,7 +9,7 @@
   to { transform: rotate(360deg); }
 }
 .small-fan-spin {
-  animation: spin-impeller 0.4s linear infinite;
+  animation: spin-impeller 0.6s linear infinite;
   transform-origin: 0 0;
 }
 
